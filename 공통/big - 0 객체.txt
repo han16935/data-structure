@@ -1,0 +1,38 @@
+객체와 big - 0
+    
+      객체 
+          - 정렬되어 있을 필요가 없을 때 작동
+          - 빠른 접근, 입력과 제거를 원할 때
+
+  big o of object 
+       insertion - 01
+       removal - 01
+       searching - 0n
+            - doesnt mean find key
+            - 어떤 특정한 정보가 어떤 값에 있는지 확인하는 것을 뜻함
+            - 즉, 모든 key에 접근해 특정 값이 있는지 확인함
+                  - 따라서, key의 개수가 많을수록 시간이 더 오래 걸림
+       access - 01
+
+  
+  big o of object method
+         object.keys - on
+         object.values - on
+         object.entries - on // 객체의 key, value가 배열로 return
+         hasOwnProperty - o1 // 특정 key가 있는지 boolean으로 return
+
+   ex) let instructors = {
+                   name : 'abc'
+                   num : 123}
+
+          object.keys(instructors) - {"name", "num"} // key의 개수가 많을수록 시간 길어짐
+
+ 
+
+        
+
+
+        
+
+       
+       

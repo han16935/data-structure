@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      const quickSort = function (arr, left = 0, right = arr.length - 1) {
+        const partition = function (arr, left, right) {
+          let pivot = left;
+          let swapIdx = left;
+          for (let i = left; i <= right; i++) {
+            if (arr[pivot] > arr[i]) {
+              swapIdx++;
+              if (swapIdx !== i) {
+                [arr[i], arr[swapIdx]] = [arr[swapIdx], arr[i]];
+              }
+            }
+          }
+          [arr[swapIdx], arr[pivot]] = [arr[pivot], arr[swapIdx]];
+          return swapIdx;
+        };
+
+        if (left < right) {
+          let p = partition(arr, left, right);
+          quickSort(arr, left, p - 1);
+          quickSort(arr, p + 1, right);
+        }
+        return arr;
+      };
+
+      const arr = [5, 4, 3, 2, 1];
+      console.log(quickSort(arr));
+    </script>
+  </body>
+</html>

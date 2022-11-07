@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const selectionSort = function (arr) {
+        const result = [...arr];
+        for (let i = 0; i < result.length - 1; i++) {
+          let min = Number.MAX_SAFE_INTEGER;
+          let minIndex = -1;
+          for (let j = i; j < result.length; j++) {
+            if (result[j] < min) {
+              min = result[j];
+              minIndex = j;
+            }
+          }
+          [result[minIndex], result[i]] = [result[i], result[minIndex]];
+        }
+        return result;
+      };
+
+      let arr = [5, 4, 3, 2, 1];
+      arr = selectionSort(arr);
+      arr.forEach(function (v, i) {
+        console.log(v);
+      });
+    </script>
+  </body>
+</html>

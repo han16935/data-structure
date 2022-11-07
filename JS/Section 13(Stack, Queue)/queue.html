@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      // 1. linked list
+      class Node {
+        constructor(data) {
+          this.data = data;
+          this.next = null;
+        }
+      }
+
+      class LinkedList {
+        constructor() {
+          this.head = null;
+          this.tail = null;
+          this.length = 0;
+        }
+
+        push(node) {
+          if (this.head === null && this.length === 0) {
+            this.head = node;
+            this.tail = node;
+          } else {
+            this.tail.next = node;
+            this.tail = node;
+          }
+          this.length++;
+        }
+
+        shift() {
+          if (this.head === null) {
+            return undefined;
+          }
+          let result = this.head.data;
+          this.head = this.head.next;
+          console.log(this.head);
+          this.length--;
+        }
+
+        print() {
+          if (this.length === 0) return undefined;
+          const result = [];
+          let next = this.head;
+          for (let i = 0; i < this.length; i++) {
+            result.push(next.data);
+            next = next.next;
+          }
+          console.log(result);
+        }
+      }
+
+      class Queue extends LinkedList {
+        constructor(linkedList = null) {
+          super(linkedList);
+          this.front = linkedList.head; // front는 제일 우선으로 제거될 노드의 위치
+          this.rear = linkedList.tail; // rear는 제일 우선으로 추가될 노드의 위치
+        }
+
+        push(node) {
+          // 1. rear의 다음에 노드 추가(linked list의 push 사용)
+          this.list.push(node);
+          this.rear = linkedList.tail;
+        }
+
+        pop() {
+          // 1. front가 가리키는 노드 제거(linked list의 shift 사용)
+          this.list.shift();
+          this.front = linkedList.head;
+        }
+      }
+
+      const test = new Queue(new LinkedList());
+      test.push(new Node(1));
+      test.push(new Node(2));
+      test.linkedList.print();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class Node {
+        constructor(data, next = null) {
+          this.data = data;
+          this.next = next;
+        }
+      }
+
+      class SingleLinkedList {
+        /* insertion : o(1)
+           removal : o(1)(리스트 맨 앞에서 노드 제거 시) / o(n)
+           searching : o(n)
+           access : o(n)
+             -- 데이터 삽입, 삭제는 linked list가 arr보다 유리
+             -- 데이터 접근은 arr가 linked list보다 유리
+        */
+        constructor(head = null, tail = null, length = 0) {
+          this.head = head;
+          this.tail = tail;
+          this.length = length;
+        }
+
+        push(node) {
+          // linked list의 마지막에 노드 삽입
+          if (this.head === null && this.length === 0) {
+            this.head = node;
+            this.tail = node;
+          } else {
+            this.tail.next = node;
+            this.tail = node;
+          }
+
+          this.length++;
+        }
+
+        pop() {
+          // linked list 마지막 노드 삭제 후, 삭제된 노드의 data 반환
+          if (this.length === 0) {
+            return `This list is empty. Please push a Node`;
+          } else if (this.length === 1) {
+            let result = this.head.data;
+            this.head = null;
+            this.tail = null;
+            this.length = 0;
+            console.log(`Data is successfully popped.`);
+            return result;
+          } else {
+            let result = this.tail.data;
+            const beforeTail = this.get(this.length - 2);
+            this.tail = beforeTail;
+            this.length--;
+            return result;
+          }
+        }
+
+        shift() {
+          // 제일 앞 노드 제거
+          if (this.head === null) {
+            return undefined;
+          }
+          let result = this.head.data;
+          this.head = this.head.next;
+          console.log(this.head);
+          this.length--;
+          return result;
+        }
+
+        unshift(node) {
+          // 제일 앞에 노드 새로 추가
+          if (this.length === 0) {
+            this.head = node;
+            this.tail = node;
+            this.length++;
+          } else {
+            node.next = this.head;
+            this.head = node;
+            this.length++;
+          }
+        }
+
+        get(n) {
+          // n번째 노드의 data 반환
+          if (typeof n !== "number" || n >= this.length || n < 0) {
+            return undefined;
+          }
+
+          if (this.length === 0) {
+            return `This list is empty. Please push a Node`;
+          } else if (this.length === 1) {
+            return this.head;
+          } else {
+            let next = this.head;
+            for (let i = 1; i <= n; i++) {
+              next = next.next;
+            }
+            return next;
+          }
+        }
+
+        set(n, data) {
+          // n번째 노드의 data를 인자로 들어온 data로 변경
+          if (!n || !data) {
+            return undefined;
+          }
+          const willChangedNode = this.get(n);
+          willChangedNode.data = data;
+          return willChangedNode;
+        }
+
+        insert(n, node) {
+          // n번째 index에 인자로 들어온 node 삽입
+          if (
+            typeof n !== "number" ||
+            n < 0 ||
+            !n ||
+            typeof node !== "object" ||
+            !node
+          )
+            return undefined;
+          if (n === 0) this.unshift(node);
+          else if (n === this.length - 1) this.push(node);
+          else {
+            const willInsertedBeforeNode = this.get(n - 1);
+            node.next = willInsertedBeforeNode.next;
+            willInsertedBeforeNode.next = node;
+            this.length++;
+            return this.print();
+          }
+        }
+
+        remove(n) {
+          // n번째 노드 삭제 후, 그 노드의 값 반환
+          if (typeof n !== "number" || !n || n >= this.length || n < 0)
+            return undefined;
+          else if (this.length === 0) return `This list is empty`;
+          else if (n === 0) return this.shift();
+          else if (n === this.length - 1) return this.pop();
+          else {
+            const result = this.get(n).data;
+            const willDeletedBeforeNode = this.get(n - 1);
+            willDeletedBeforeNode.next = this.get(n).next;
+            this.length--;
+            console.log(`Data is successfully removed.`);
+            return result;
+          }
+        }
+
+        reverse() {
+          const firstNode = this.get(0);
+          const lastNode = this.get(this.length - 1);
+          // linked list의 노드 순서를 거꾸로
+          /*
+                 t           h
+                 1 > 2 > 3 > 4
+
+                 1. 4 노드의 next를 3 노드의 주소로(3 <> 4)
+                 2. 3 노드의 next를 2 노드의 주소로(2 <> 3, 3 < 4)
+                 3. 2 노드의 next를 1 노드의 주소로(1 <> 2, 2 < 3 < 4)
+                 4. 1 노드의 next를 null로(2 > 1 > null)
+                 5. 완성! (4 > 3 > 2 > 1)
+              */
+
+          for (let i = this.length - 1; i > 0; i--) {
+            let tmpNode = this.get(i);
+            let tmpBeforeNode = this.get(i - 1);
+            tmpNode.next = tmpBeforeNode;
+          }
+          firstNode.next = null;
+          this.head = lastNode;
+          this.tail = firstNode;
+          this.print();
+          return `Reverse method is completed!`;
+        }
+        print() {
+          // linked list에 있는 data를 전부 출력
+          if (this.length === 0) return undefined;
+          const result = [];
+          let next = this.head;
+          for (let i = 0; i < this.length; i++) {
+            result.push(next.data);
+            next = next.next;
+          }
+          console.log(result);
+        }
+      }
+
+      const concatTwoLists = function (list1, list2) {
+        // 1. list1의 끝 노드의 next를 list2의 head 노드로 연결
+        const firstTailNode = list1.tail;
+        firstTailNode.next = list2.head;
+        // 2. list1의 tail, length 변경
+        list1.tail = list2.tail;
+        list1.length = list1.length + list2.length;
+        return list1;
+      };
+
+      // 실제 실행 코드 시작
+      const newNode = new Node(1);
+      const newList = new SingleLinkedList();
+      const testList = new SingleLinkedList();
+      newList.push(newNode);
+      newList.push(new Node(2));
+      newList.push(new Node(3));
+      newList.push(new Node(4));
+      testList.push(new Node(5));
+      testList.push(new Node(6));
+      const combinedList = concatTwoLists(newList, testList);
+      combinedList.print();
+    </script>
+  </body>
+</html>

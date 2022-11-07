@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 위 파일은 merge sort에서 정렬되어 있는 두 배열을 하나로 합치는 과정을 서술
+      "use strict";
+      const merge = function (arr1, arr2) {
+        const result = [];
+        let h1 = 0;
+        let h2 = 0;
+        while (h1 < arr1.length && h2 < arr2.length) {
+          if (arr1[h1] <= arr2[h2]) result.push(arr1[h1++]);
+          else result.push(arr2[h2++]);
+        }
+
+        if (h1 < arr1.length) {
+          for (let i = h1; i < arr1.length; i++) {
+            result.push(arr1[i]);
+          }
+        } else {
+          for (let j = h2; j < arr2.length; j++) {
+            result.push(arr2[j]);
+          }
+        }
+        return result;
+      };
+
+      const mergeSort = function (arr) {
+        if (arr.length <= 1) return arr;
+        else {
+          let mid = Math.floor(arr.length / 2);
+          let left = mergeSort(arr.slice(0, mid));
+          let right = mergeSort(arr.slice(mid));
+          return merge(left, right);
+        }
+      };
+
+      console.log(mergeSort([2, 3, 1, 4, 6, 5, 7]));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      const bubbleSort = function (arr) {
+        let tmp;
+        let flag = 1;
+        const sortedResult = [...arr];
+        for (let i = sortedResult.length; i > 1; i--) {
+          for (let j = 0; j < i; j++) {
+            if (sortedResult[j] > sortedResult[j + 1]) {
+              tmp = sortedResult[j + 1];
+              sortedResult[j + 1] = sortedResult[j];
+              sortedResult[j] = tmp;
+              flag = 0;
+            }
+          }
+          console.log(sortedResult);
+        }
+        return sortedResult;
+      };
+
+      const originalArr = [8, 1, 2, 3, 4];
+      const sortedArr = bubbleSort(originalArr);
+      sortedArr.forEach(function (v, i) {
+        console.log(v);
+      });
+    </script>
+  </body>
+</html>

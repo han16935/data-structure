@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      class Node {
+        constructor(data) {
+          this.data = data;
+          this.prev = null;
+          this.next = null;
+        }
+      }
+
+      class DoubleLinkedList {
+        constructor(head = null, tail = null, length = 0) {
+          this.head = head;
+          this.tail = tail;
+          this.length = length;
+        }
+
+        push(node) {
+          // list의 tail 다음에 인자로 들어온 노드 추가
+          if (
+            !node ||
+            typeof node !== "object" ||
+            node.data === null ||
+            node.data === undefined
+          ) {
+            console.log(`Please input valid data.`);
+            return 0;
+          }
+
+          if (this.length === 0) this.head = node;
+          else {
+            this.tail.next = node;
+            node.prev = this.tail;
+          }
+          this.tail = node;
+          this.length++;
+          return `Node ${node.data} is successfully pushed.`;
+        }
+
+        pop() {
+          // list의 tail node 제거 후, 제거한 노드의 데이터 return
+          if (!this.length) return `This list is empty.`;
+          if (this.length === 1) {
+            const willPoppedNode = this.head;
+            this.head = null;
+            this.tail = null;
+            this.length--;
+            return `Node ${willPoppedNode.data} is successfully popped.`;
+          }
+          const willPoppedNode = this.tail;
+          this.tail = willPoppedNode.prev;
+          willPoppedNode.prev.next = null;
+          willPoppedNode.prev = null;
+          this.length--;
+          return `Node ${willPoppedNode.data} is successfully popped.`;
+        }
+
+        unshift(node) {
+          // list의 제일 앞에 새로운 노드 삽입
+          if (
+            !node ||
+            typeof node !== "object" ||
+            node.data === null ||
+            node.data === undefined
+          )
+            return `Please input valid data.`;
+          if (this.length === 0) this.push(node);
+          this.head.prev = node;
+          node.next = this.head;
+          this.head = node;
+          this.length++;
+          return `Node ${node.data} is successfully pushed.`;
+        }
+
+        shift() {
+          // list의 head node 제거 후, 제거한 노드의 데이터 return
+          if (!this.length) return `This list is empty.`;
+          if (this.length === 1) {
+            const willPoppedNode = this.head;
+            this.head = null;
+            this.tail = null;
+            this.length--;
+            return `Node ${willPoppedNode.data} is successfully popped.`;
+          }
+          const willPoppedNode = this.head;
+          this.head = willPoppedNode.next;
+          this.length--;
+          return `Node ${willPoppedNode.data} is successfully popped.`;
+        }
+
+        get(index) {
+          // list의 index 번째 node의 데이터 return
+          if (
+            index === undefined ||
+            index === null ||
+            typeof index !== "number" ||
+            index >= this.length ||
+            index < 0
+          )
+            return `Please input valid data`;
+          if (this.length === 0) return `This list is empty.`;
+          let traverseNode = this.head;
+          for (let i = 0; i < index; i++) {
+            traverseNode = traverseNode.next;
+          }
+          return traverseNode;
+        }
+
+        getData(index) {
+          if (
+            index === undefined ||
+            index === null ||
+            typeof index !== "number" ||
+            index >= this.length ||
+            index < 0
+          )
+            return `Please input valid data`;
+          if (this.length === 0) return `This list is empty.`;
+          let traverseNode = this.head;
+          for (let i = 0; i < index; i++) {
+            traverseNode = traverseNode.next;
+          }
+          return traverseNode.data;
+        }
+
+        set(index, data) {
+          if (
+            index === undefined ||
+            index === null ||
+            typeof index !== "number" ||
+            index >= this.length ||
+            index < 0
+          )
+            return `Please input valid index.`;
+
+          if (typeof data === "undefined" || typeof data === "null")
+            return `Please input data`;
+          const willChanagedNode = this.get(index);
+          willChanagedNode.data = data;
+          return willChanagedNode;
+        }
+
+        insert(index, node) {
+          if (typeof index !== "number" || index < 0 || index > this.length)
+            return `Please input valid index.`;
+          if (
+            !node ||
+            typeof node.data === "undefined" ||
+            typeof node.data === "null"
+          )
+            return `Please input valid node.`;
+          if (index === this.length) this.push(node);
+          if (index === 0) this.unshift(node);
+          const willInsertedBeforeNode = this.get(index - 1);
+          console.log(willInsertedBeforeNode);
+          node.next = willInsertedBeforeNode.next;
+          willInsertedBeforeNode.next.prev = node;
+          willInsertedBeforeNode.next = node;
+          this.length++;
+          return `Node ${node.data} is successfully inserted.`;
+        }
+
+        remove(index) {
+          if (typeof index !== "number" || index < 0 || index >= this.length)
+            return `Please input valid index.`;
+          if (index === 0) this.shift();
+          if (index === this.length - 1) this.pop();
+          const willRemovedData = this.get(index).data;
+          const willRemovedBeforeNode = this.get(index - 1);
+          const willRemovedAfterNode = this.get(index + 1);
+          willRemovedAfterNode.prev = willRemovedBeforeNode;
+          willRemovedBeforeNode.next = willRemovedAfterNode;
+          this.length--;
+          return `Node ${willRemovedData} is successfully removed.`;
+        }
+
+        print() {
+          // list에 속한 node의 data를 head부터 순서대로 출력
+          if (!this.length) {
+            console.log(`This list is empty!`);
+            return 0;
+          }
+          let traverseNode = this.head;
+          while (traverseNode !== this.tail) {
+            console.log(traverseNode.data);
+            traverseNode = traverseNode.next;
+          }
+          console.log(traverseNode.data);
+        }
+      }
+
+      const newList = new DoubleLinkedList();
+      newList.push(new Node(1));
+      newList.push(new Node(2));
+      newList.push(new Node(3));
+    </script>
+  </body>
+</html>

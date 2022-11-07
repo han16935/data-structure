@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      /*
+          insert, find : o(logn)
+             - 평균, 최상의 경우 적용
+             - bst가 자식이 1개인 노드만 이어질 경우에는 o(n)
+       */
+      class Node {
+        constructor(data) {
+          this.data = data;
+          this.left = null;
+          this.right = null;
+        }
+      }
+
+      class BinarySearchTree {
+        constructor() {
+          this.root = null;
+        }
+
+        insert(data) {
+          // 인자로 들어온 data를 가진 노드 삽입시킴
+          const node = new Node(data);
+          if (this.root === null) {
+            this.root = node;
+            return `This node is inserted to root.`;
+          }
+
+          let standardNode = this.root;
+
+          // recursive ver.
+          const callBackInsert = function (node) {
+            if (node.data < standardNode.data) {
+              if (standardNode.left) {
+                standardNode = standardNode.left;
+                callBackInsert(node);
+              } else {
+                standardNode.left = node;
+              }
+            } else if (node.data > standardNode.data) {
+              if (standardNode.right) {
+                standardNode = standardNode.right;
+                callBackInsert(node);
+              } else {
+                standardNode.right = node;
+              }
+            }
+          };
+
+          callBackInsert(node);
+
+          //  iterative ver.
+          //   while (1) {
+          //     if (node.data < standardNode.data) {
+          //       if (standardNode.left) standardNode = standardNode.left;
+          //       else {
+          //         standardNode.left = node;
+          //         break;
+          //       }
+          //     } else if (node.data > standardNode.data) {
+          //       if (standardNode.right) standardNode = standardNode.right;
+          //       else {
+          //         standardNode.right = node;
+          //         break;
+          //       }
+          //     }
+          //   }
+        }
+
+        find(data) {
+          // 특정 데이터를 가진 노드의 부모 노드 반환(부모 노드가 없다면 자신 반환)
+          if (!data) return `Please write the data`;
+          let parentNode = null;
+          let standardNode = this.root;
+          while (1) {
+            if (standardNode.data === data) break;
+            else if (standardNode.data < data) {
+              parentNode = standardNode;
+              standardNode = standardNode.right;
+            } else if (standardNode.data > data) {
+              parentNode = standardNode;
+              standardNode = standardNode.left;
+            }
+          }
+          return parentNode ? parentNode : standardNode;
+        }
+
+        findSuccessor(node) {
+          //  특정 노드가 입력되면, 그 노드의 successor를 반환(부모 반환 X)
+          //  1. right subtree의 최솟값을 가진 노드 반환(즉, node.left가 null이 나올 때까지 계속 반복)
+          let subTreeNode = node.right;
+          while (subTreeNode.left) {
+            subTreeNode = subTreeNode.left;
+          }
+          return subTreeNode;
+        }
+
+        findSuccessorParent(node) {
+          let willReturnNode = null;
+          let subTreeNode = node.right;
+          while (subTreeNode.left) {
+            willReturnNode = subTreeNode;
+            subTreeNode = subTreeNode.left;
+          }
+          return willReturnNode;
+        }
+
+        remove(data) {
+          // 특정 데이터를 포함한 노드 삭제
+          //   1. find를 통해 삭제할 노드의 부모 노드 탐색(없다면 return -1)
+          //   2. 삭제할 노드가 부모 노드의 left인지, right인지 확인 후 삭제
+          //        A. 삭제할 노드의 자식이 0개인 경우 - 부모 노드와 연결 제거 후 return data
+          //        B.       ..            1개인 경우 - 삭제할 노드의 자식 노드와 부모 노드를 연결
+          //        C.       ..            2개인 경우 - 삭제할 노드의 successor / predecessor 찾은 후
+          //                                            데이터 swap, 교환된 leaf 노드는 삭제
+
+          // 1
+          const parentNode = this.find(data);
+          const willRemovedNode =
+            parentNode.data > data ? parentNode.left : parentNode.right;
+
+          // 2
+          const flag = parentNode.data > data ? 0 : 1; // left면 0, right면 1
+          if (!parentNode) return -1;
+
+          // 2-A
+          if (!willRemovedNode.left && !willRemovedNode.right) {
+            if (flag === 0) parentNode.left = null;
+            else parentNode.right = null;
+          }
+
+          // 2-B
+          else if (willRemovedNode.left && willRemovedNode.right) {
+            const successor = this.findSuccessor(willRemovedNode);
+            const successorParent = this.findSuccessorParent(willRemovedNode);
+            console.log(successorParent);
+            [successor.data, willRemovedNode.data] = [
+              willRemovedNode.data,
+              successor.data,
+            ];
+          }
+
+          // 2-C
+          else {
+            if (willRemovedNode.left) {
+              [willRemovedNode.left.data, willRemovedNode.data] = [
+                willRemovedNode.data,
+                willRemovedNode.left.data,
+              ];
+              willRemovedNode.left = null;
+            } else if (willRemovedNode.right) {
+              [willRemovedNode.right.data, willRemovedNode.data] = [
+                willRemovedNode.data,
+                willRemovedNode.right.data,
+              ];
+              willRemovedNode.right = null;
+            }
+          }
+        }
+      }
+
+      const bst = new BinarySearchTree();
+      bst.root = new Node(10);
+      bst.insert(5);
+      bst.insert(2);
+      bst.insert(6);
+      bst.insert(13);
+      bst.insert(12);
+      bst.insert(14);
+      console.log(bst);
+      bst.find(14);
+    </script>
+  </body>
+</html>
