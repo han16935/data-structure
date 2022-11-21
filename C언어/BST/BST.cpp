@@ -86,6 +86,32 @@ void find(BST * bst, int data){
     printf("%d answer\n", currentNode->data);
 }
 
+void preOrder(node * root){
+	if(root){
+		printf("%d ", root->data);
+		preOrder(root->left);
+		preOrder(root->right);
+	}
+}
+
+void inOrder(node * root){
+    node * n1 = root;
+	if(n1){
+		inOrder(n1->left);
+		printf("%d", n1->data);
+		inOrder(n1->right);
+	} 
+}
+
+void postOrder(node * root){
+	node * n1 = root;
+	if(n1){
+		postOrder(n1->left);
+		postOrder(n1->right);
+		printf("%d", n1->data);
+	}
+}
+
 
 int main(void){
 	BST bst; 
@@ -94,6 +120,5 @@ int main(void){
     insert(&bst, 7);
     insert(&bst, 3);
     insert(&bst, 1);
-    find(&bst, 7);
-    find(&bst, 1);
+    inOrder(bst.root);
 }

@@ -166,6 +166,67 @@
             }
           }
         }
+
+        preOrder() {
+          let node = this.root;
+          const preOrderArr = [];
+          const callBackPreOrder = function (node) {
+            if (node) {
+              preOrderArr.push(node.data);
+              callBackPreOrder(node.left);
+              callBackPreOrder(node.right);
+            }
+          };
+          callBackPreOrder(node);
+          console.log(preOrderArr);
+        }
+
+        inOrder() {
+          let node = this.root;
+          const inOrderArr = [];
+          const callBackInOrder = function (node) {
+            if (node) {
+              callBackInOrder(node.left);
+              inOrderArr.push(node.data);
+              callBackInOrder(node.right);
+            }
+          };
+          callBackInOrder(node);
+          console.log(inOrderArr);
+        }
+
+        postOrder() {
+          let node = this.root;
+          const postOrderArr = [];
+          const callBackPostOrder = function (node) {
+            if (node) {
+              callBackPostOrder(node.left);
+              callBackPostOrder(node.right);
+              postOrderArr.push(node.data);
+            }
+          };
+          callBackPostOrder(node);
+          console.log(postOrderArr);
+        }
+
+        levelOrder() {
+          /*
+            1. root를 저장하는 변수 node 생성
+            2. 
+          */
+
+          let node = this.root;
+          const queue = [];
+          const result = [];
+          queue.push(node);
+          while (node) {
+            node = queue.shift();
+            result.push(node);
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+          }
+          console.log(result);
+        }
       }
 
       const bst = new BinarySearchTree();
@@ -176,8 +237,7 @@
       bst.insert(13);
       bst.insert(12);
       bst.insert(14);
-      console.log(bst);
-      bst.find(14);
+      bst.levelOrder();
     </script>
   </body>
 </html>
