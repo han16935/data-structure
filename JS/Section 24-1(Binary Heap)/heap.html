@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class MaxBinaryHeap {
+        constructor() {
+          //   부모는 math.floor(index/2)
+          //   left 자식은 2 * index + 1, right 자식은 2 * index + 2
+          this.array = [];
+        }
+
+        insert(value) {
+          /*
+             1. 배열 마지막에 요소 추가
+             2. 부모가 추가한 요소보다 작다면, heap property를 만족할 때까지 swap
+          */
+          this.array.push(value);
+          let index = this.array.length - 1;
+          while (
+            this.array[Math.floor(index - 1 / 2)] < this.array[index] &&
+            index >= 1
+          ) {
+            [this.array[index], this.array[Math.floor(index - 1 / 2)]] = [
+              this.array[Math.floor(index - 1 / 2)],
+              this.array[index],
+            ];
+            index = Math.floor(index - 1 / 2);
+          }
+        }
+
+        remove() {
+          /*
+            heap의 remove는 주로 max heap에서는 최댓값, min heap에서는 최솟값 제거
+            1. 0번째 index <-> 마지막 index swap 후 바뀐 마지막 요소(원래 0번째에 있던 요소) 제거
+            2. 바뀐 첫번째 요소의 left, right 비교 후 더 큰 자식과 자신을 swap
+                - 이는 자신이 left / right보다 크거나, 자식이 없을 때까지 반복함
+          */
+
+          [this.array[this.array.length - 1], this.array[0]] = [
+            this.array[0],
+            this.array[this.array.length - 1],
+          ];
+          const result = this.array.pop();
+          let index = 0;
+          let left = 1;
+          let right = 2;
+          while (
+            this.array[left] &&
+            (this.array[index] < this.array[left] ||
+              this.array[index] < this.array[right])
+          ) {
+            // 1. left 자식만 존재할 경우(heap에서 left가 없고, right만 존재하는 상황은 X)
+            if (!this.array[right]) {
+              [this.array[left], this.array[index]] = [
+                this.array[index],
+                this.array[left],
+              ];
+              return result;
+            }
+
+            // 2. left, right 자식 전부 존재할 경우
+            if (this.array[left] && this.array[right]) {
+              let max = this.array[left] > this.array[right] ? left : right;
+              [this.array[max], this.array[index]] = [
+                this.array[index],
+                this.array[max],
+              ];
+              index = max;
+              left = 2 * max + 1;
+              right = 2 * max + 2;
+            }
+          }
+          return result;
+        }
+
+        print() {
+          console.log(this.array);
+        }
+      }
+
+      const heap = new MaxBinaryHeap();
+      heap.insert(5);
+      heap.insert(3);
+      heap.insert(7);
+      heap.insert(9);
+      heap.insert(11);
+      console.log(heap);
+    </script>
+  </body>
+</html>
