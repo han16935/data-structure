@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      class HashTable {
+        constructor(size = 53) {
+          this.keyMap = new Array(size);
+        }
+
+        hash(key, arrayLen) {
+          let total = 0;
+          let WEIRD_PRIME = 31;
+          for (let i = 0; i < Math.min(key.length, 100); i++) {
+            let char = key[i];
+            let value = char.charCodeAt(0) - 96;
+            total = (total * WEIRD_PRIME + value) % this.keyMap.length;
+          }
+          return total;
+        }
+
+        set(key, value) {
+          /*
+               1. 인자로 들어온 key에 대해 hash function 실행
+               2. this.keyMap의 index에 빈 배열 만든 뒤, [key, value] 배열 삽입
+            */
+          const hashIndex = this.hash(key);
+          this.keyMap[hashIndex] = [];
+          this.keyMap[hashIndex].push([key, value]);
+        }
+
+        get(key) {
+          /*
+                 1. 인자로 들어온 key에 대해 hash function 실행
+                 2. this.keyMap의 index에 접근해서 search 실행(만약 없다면, undefined return)
+              */
+          const hashIndex = this.hash(key);
+          if (!this.keyMap[hashIndex]) return `undefined!`;
+          for (let i = 0; i < this.keyMap[hashIndex].length; i++) {
+            if (this.keyMap[hashIndex][i][0] === key)
+              return this.keyMap[hashIndex][i][1];
+          }
+        }
+
+        keys() {
+          /*
+               Hash table에 속한 모든 key 출력
+               1. key를 저장하는 배열 생성
+               2. keyMap 순회하면서 key 저장
+               3. 배열 출력
+            */
+
+          const keyArray = [];
+          for (let i = 0; i < this.keyMap.length; i++) {
+            if (this.keyMap[i]) {
+              for (let j = 0; j < this.keyMap[i].length; j++) {
+                keyArray.push(this.keyMap[i][j][0]);
+              }
+            }
+          }
+          return keyArray;
+        }
+
+        values() {
+          /*
+               Hash table에 속한 모든 values 출력
+               1. values를 저장하는 배열 생성
+               2. keyMap 순회하면서 values 저장
+               3. 배열 출력
+            */
+
+          const valArr = [];
+          for (let i = 0; i < this.keyMap.length; i++) {
+            if (this.keyMap[i]) {
+              for (let j = 0; j < this.keyMap[i].length; j++) {
+                valArr.push(this.keyMap[i][j][1]);
+              }
+            }
+          }
+          return valArr;
+        }
+      }
+
+      const newHash = new HashTable();
+      newHash.set("abc", 1);
+      newHash.set("def", 2);
+      console.log(newHash.keys());
+      console.log(newHash.values());
+    </script>
+  </body>
+</html>
