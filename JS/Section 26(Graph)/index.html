@@ -52,17 +52,114 @@
           }
           delete this.adjList[vertex];
         }
+
+        DepthFirstSearch_recursive(vertex) {
+          if (!vertex || !this.adjList.hasOwnProperty(vertex)) return "NO!";
+          // result에는 순회 결과를, visited에는 특정 vertex를 방문했는지 확인("A" : true)로
+          const result = [];
+          const visited = {};
+          // js 언어 자체 오류 ! callback function 안에서는 this.---- 참조 불가능(undefined로 인지)
+          const adjList = this.adjList;
+          const dfs_recursive = function (vertex) {
+            if (!visited.hasOwnProperty(vertex)) {
+              visited[vertex] = true;
+              result.push(vertex);
+              for (const v of adjList[vertex]) {
+                dfs_recursive(v);
+              }
+            }
+          };
+          dfs_recursive(vertex);
+          return result;
+        }
+
+        DepthFirstSearch_iterative(vertex) {
+          /*
+             1. result array, visited object 사용(c언어에서는 visited array로, search해서 있는지 확인)
+             2. stack 생성(this.adjList[vertex] 내부의 원소 삽입)
+             3. stack pop한 뒤(result, visited 삽입), pop한 요소의 this.adjList 내부 원소를 stack 삽입
+          */
+
+          // 예외 처리
+          if (!vertex || !this.adjList.hasOwnProperty(vertex)) return "NO!";
+
+          const result = [];
+          const visited = {};
+          const stack = [];
+
+          // 인자 vertex를 stack에 삽입
+          stack.push(vertex);
+
+          while (stack.length) {
+            const popped = stack.pop();
+            if (!visited.hasOwnProperty(popped)) {
+              visited[popped] = true;
+              result.push(popped);
+              for (const v of this.adjList[popped]) {
+                stack.push(v);
+              }
+            }
+          }
+          return result;
+        }
+
+        BFS(vertex) {
+          // 1. Udemy Solution
+          // const queue = [vertex];
+          // const result = [];
+          // const visited = {};
+          // let currentVertex;
+          // visited[vertex] = true;
+
+          // while (queue.length) {
+          //   currentVertex = queue.shift();
+          //   result.push(currentVertex);
+
+          //   this.adjList[currentVertex].forEach((neighbor) => {
+          //     if (!visited[neighbor]) {
+          //       visited[neighbor] = true;
+          //       queue.push(neighbor);
+          //     }
+          //   });
+          // }
+          // return result;
+
+          const result = [];
+          const queue = [];
+          const visited = {};
+          queue.push(vertex);
+          visited[vertex] = true;
+          let popped;
+          while (queue.length) {
+            popped = queue.pop();
+            result.push(popped);
+            for (const v of this.adjList[popped]) {
+              if (!visited[v]) {
+                queue.unshift(v);
+                visited[v] = true; // 139번째 코드를 for 밖에서 작성하면 오류 발생
+              }
+            }
+          }
+          return result;
+        }
       }
 
-      const newGraph = new Graph();
-      newGraph.addVertex(1);
-      newGraph.addVertex(4);
-      newGraph.addVertex(6);
-      newGraph.addEdge(6, 1);
-      newGraph.addEdge(6, 4);
-      newGraph.addEdge(1, 4);
-      newGraph.deleteVertex(6);
-      console.log(newGraph);
+      const g1 = new Graph();
+      g1.addVertex("A");
+      g1.addVertex("B");
+      g1.addVertex("C");
+      g1.addVertex("D");
+      g1.addVertex("E");
+      g1.addVertex("F");
+
+      g1.addEdge("A", "B");
+      g1.addEdge("A", "C");
+      g1.addEdge("B", "D");
+      g1.addEdge("C", "E");
+      g1.addEdge("D", "E");
+      g1.addEdge("D", "F");
+      g1.addEdge("E", "F");
+      console.log(g1.BFS("A"));
     </script>
   </body>
 </html>
