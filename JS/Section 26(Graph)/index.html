@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      class Graph {
+        constructor() {
+          this.adjList = {};
+        }
+
+        addVertex(val) {
+          if (this.adjList.hasOwnProperty(val))
+            return `This key is already added.`;
+          else this.adjList[val] = [];
+          return 1;
+        }
+
+        addEdge(v1, v2) {
+          if (this.adjList.hasOwnProperty(v1 && v2)) {
+            this.adjList[v1].push(v2);
+            this.adjList[v2].push(v1);
+            return 1;
+          }
+          return 0;
+        }
+
+        deleteEdge(v1, v2) {
+          // v1과 v2의 연결 제거
+          if (
+            !this.adjList.hasOwnProperty(v1) ||
+            !this.adjList.hasOwnProperty(v2)
+          )
+            return 0;
+          this.adjList[v1] = this.adjList[v1].filter(function (v, i) {
+            return v !== v2;
+          });
+
+          this.adjList[v2] = this.adjList[v2].filter(function (v, i) {
+            return v !== v1;
+          });
+        }
+
+        deleteVertex(vertex) {
+          for (const [key, val] in this.adjList) {
+            if (key !== vertex) this.deleteEdge(key, vertex);
+          }
+          delete this.adjList[vertex];
+        }
+      }
+
+      const newGraph = new Graph();
+      newGraph.addVertex(1);
+      newGraph.addVertex(4);
+      newGraph.addVertex(6);
+      newGraph.addEdge(6, 1);
+      newGraph.addEdge(6, 4);
+      newGraph.addEdge(1, 4);
+      newGraph.deleteVertex(6);
+      console.log(newGraph);
+    </script>
+  </body>
+</html>
