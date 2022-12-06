@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      "use strict";
+      const naive_fibonacci = function (n) {
+        if (n <= 2) return 1;
+        else return naive_fibonacci(n - 1) + naive_fibonacci(n - 2);
+      };
+
+      const dp_fibonacci = function (n, arr = [undefined, 1, 1]) {
+        // top-down 방식, call stack exceed 발생할 수 있음
+        if (arr[n] !== undefined) return arr[n];
+        else {
+          let result = dp_fibonacci(n - 1, arr) + dp_fibonacci(n - 2, arr);
+          arr[n] = result;
+          return result;
+        }
+      };
+
+      const bottom_up_fibonacci = function (n, arr = [undefined, 1, 1]) {
+        // bottom-up 방식, fibonacci(n)을 구하기 전, fibonacci(3), (4), ... 차례로 구함
+        for (let i = 3; i <= n; i++) {
+          arr[i] = arr[i - 1] + arr[i - 2];
+        }
+        return arr[n];
+      };
+
+      console.log(naive_fibonacci(10));
+      console.log(dp_fibonacci(50));
+      console.log(bottom_up_fibonacci(100));
+    </script>
+  </body>
+</html>
